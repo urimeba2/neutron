@@ -56,6 +56,7 @@ class MeteringPluginRpc(object):
     def _get_sync_data_metering(self, context):
         try:
             cctxt = self.client.prepare()
+            LOG.debug("GOOD synchronizing routers")
             return cctxt.call(context, 'get_sync_data_metering',
                               host=self.host)
         except Exception:
@@ -91,6 +92,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
                                                                 self.conf)
 
     def _metering_notification(self):
+        LOG.debug("Trying to _metering_notification...")
         for key, info in self.metering_infos.items():
             data = self.create_notification_message_data(info, key)
 
@@ -111,6 +113,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             info['time'] = 0
 
     def create_notification_message_data(self, info, key):
+        LOG.debug("Trying to create_notification_message_data...")
         data = {'pkts': info['pkts'],
                 'bytes': info['bytes'],
                 'time': info['time'],
@@ -162,6 +165,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             raise Exception(_("Unexpected key [%s] format.") % key)
 
     def configure_project_id_shared_labels(self, data, key):
+        LOG.debug("Trying to configure_project_id_shared_labels...")
         if driver.BASE_PROJECT_TRAFFIC_COUNTER_KEY in key:
             project_id = key.split(driver.BASE_PROJECT_TRAFFIC_COUNTER_KEY)[1]
 
@@ -175,6 +179,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             data['project_id'] = 'all'
 
     def configure_project_id_based_on_router(self, data, router_id):
+        LOG.debug("Trying to configure_project_id_based_on_router...")
         if router_id in self.routers:
             router = self.routers[router_id]
             data['project_id'] = router['tenant_id']
@@ -182,6 +187,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             LOG.warning("Could not find router with ID [%s].", router_id)
 
     def _purge_metering_info(self):
+        LOG.debug("Trying to _purge_metering_info...")
         deadline_timestamp = timeutils.utcnow_ts() - self.conf.report_interval
         expired_metering_info_key = [
             key for key, info in self.metering_infos.items()
@@ -191,6 +197,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             del self.metering_infos[key]
 
     def _add_metering_info(self, key, traffic_counter):
+        LOG.debug("Trying to _add_metering_info...")
         granularity = traffic_counter.get('traffic-counter-granularity')
 
         ts = timeutils.utcnow_ts()
@@ -208,6 +215,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         return info
 
     def _add_metering_infos(self):
+        LOG.debug("Trying to _add_metering_infoS...")
         self.label_tenant_id = {}
         for router in self.routers.values():
             tenant_id = router['tenant_id']
@@ -229,6 +237,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             self._add_metering_info(key, traffic_counter)
 
     def _metering_loop(self):
+        LOG.debug("Trying to _metering_loop...")
         self._sync_router_namespaces(self.context, self.routers.values())
         self._add_metering_infos()
 
@@ -243,6 +252,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
 
     @runtime.synchronized('metering-agent')
     def _invoke_driver(self, context, meterings, func_name):
+        LOG.debug("Trying to _invoke_driver...")
         try:
             return getattr(self.metering_driver, func_name)(context, meterings)
         except AttributeError:
@@ -256,6 +266,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
 
     @periodic_task.periodic_task(run_immediately=True)
     def _sync_routers_task(self, context):
+        LOG.debug("Trying to _sync_routers_task...")
         routers = self._get_sync_data_metering(self.context)
 
         routers_on_agent = set(self.routers.keys())
@@ -270,6 +281,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         self._update_routers(context, routers)
 
     def router_deleted(self, context, router_id):
+        LOG.debug("Trying to router_deleted...")
         self._add_metering_infos()
 
         if router_id in self.routers:
@@ -279,6 +291,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
                                    'remove_router')
 
     def routers_updated(self, context, routers=None):
+        LOG.debug("Trying to routers_updated...")
         if not routers:
             routers = self._get_sync_data_metering(self.context)
         if not routers:
@@ -286,6 +299,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         self._update_routers(context, routers)
 
     def _update_routers(self, context, routers):
+        LOG.debug("Trying to _update_routers...")
         for router in routers:
             self.routers[router['id']] = router
 
@@ -303,10 +317,12 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         return self._invoke_driver(context, routers, 'sync_router_namespaces')
 
     def add_metering_label_rule(self, context, routers):
+        LOG.debug("Trying to add_metering_label_rule...")
         return self._invoke_driver(context, routers,
                                    'add_metering_label_rule')
 
     def remove_metering_label_rule(self, context, routers):
+        LOG.debug("Trying to remove_metering_label_rule...")
         return self._invoke_driver(context, routers,
                                    'remove_metering_label_rule')
 
@@ -325,6 +341,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
                                    'add_metering_label')
 
     def store_metering_labels(self, router):
+        LOG.debug("Trying to store_metering_labels...")
         labels = router[constants.METERING_LABEL_KEY]
         for label in labels:
             self.metering_labels[label['id']] = label
@@ -347,6 +364,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
 class MeteringAgentWithStateReport(MeteringAgent):
 
     def __init__(self, host, conf=None):
+        LOG.debug("Trying to create MeteringAgentWithStateReport...")
         super(MeteringAgentWithStateReport, self).__init__(host=host,
                                                            conf=conf)
         self.state_rpc = agent_rpc.PluginReportStateAPI(topics.REPORTS)
@@ -371,6 +389,7 @@ class MeteringAgentWithStateReport(MeteringAgent):
             self.heartbeat.start(interval=report_interval)
 
     def _report_state(self):
+        LOG.debug("Trying to _report_state...")
         try:
             self.state_rpc.report_state(self.context, self.agent_state,
                                         self.use_call)
