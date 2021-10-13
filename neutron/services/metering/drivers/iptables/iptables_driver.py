@@ -507,7 +507,9 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
             ))
             return
 
-        LOG.debug("The router: {router}, with RM: {rm}, has metering labels: {metering_labels}".format(
+
+        LOG.debug("All routers: {routers}. The router: {router}, with RM: {rm}, has metering labels: {metering_labels}".format(
+                routers=self.routers,
                 router=router,
                 rm=rm,
                 metering_labels=rm.metering_labels
