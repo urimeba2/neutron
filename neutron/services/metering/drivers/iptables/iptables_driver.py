@@ -459,18 +459,35 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
 
     @log_helpers.log_method_call
     def get_traffic_counters(self, context, routers):
+        LOG.debug("Inside IPTABLES_DRIVER in get_traffic_counters, with context {context} and routers {routers}".format(
+            context=context,
+            routers=routers
+        ))
         traffic_counters = {}
         routers_to_reconfigure = set()
         for router in routers:
             if self.granular_traffic_data:
+                LOG.debug("Inside IF in get_traffic_counters IN IPTABLES_DRIVER, with router {router}".format(
+                    router=router
+                ))
                 self.retrieve_and_account_granular_traffic_counters(
                     router, routers_to_reconfigure, traffic_counters)
             else:
+                LOG.debug("Inside ELSE in get_traffic_counters IN IPTABLES_DRIVER, with router {router}".format(
+                    router=router
+                ))
                 self.retrieve_and_account_traffic_counters_legacy(
                     router, routers_to_reconfigure, traffic_counters)
 
+        LOG.debug("Inside IPTABLES_DRIVER, with routers_to_reconfigure: {routers_to_reconfigure}".format(
+            routers_to_reconfigure=routers_to_reconfigure
+            ))
         for router_id in routers_to_reconfigure:
             del self.routers[router_id]
+
+        LOG.debug("Inside IPTABLES_DRIVER, with traffic_counters: {traffic_counters}".format(
+            traffic_counters=traffic_counters
+            ))
 
         return traffic_counters
 
