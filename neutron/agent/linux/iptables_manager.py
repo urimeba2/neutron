@@ -86,6 +86,9 @@ def comment_rule(rule, comment):
 
 
 def get_chain_name(chain_name, wrap=True):
+    LOG.debug("Inside get_chain_name in IPTABLES_MANAGER.PY, with wrap: {wrap}".format(
+        wrap=wrap
+    ))
     if wrap:
         return chain_name[:constants.MAX_IPTABLES_CHAIN_LEN_WRAP]
     else:
@@ -153,6 +156,10 @@ class IptablesTable(object):
         it'll actually end up being named 'neutron-openvswi-OUTPUT'.
 
         """
+        LOG.debug("Adding chain with name: {name} and wrap: {wrap}".format(
+            name=name,
+            wrap=wrap
+        ))
         name = get_chain_name(name, wrap)
         if wrap:
             self.chains.add(name)

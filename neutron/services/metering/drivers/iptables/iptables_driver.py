@@ -374,6 +374,7 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
         self._process_metering_rule_action(router, 'delete')
 
     def _create_metering_label_chain(self, rm, label_chain, rules_chain):
+        LOG.debug("Creating label_chain in IPTABLES_DRIVER")
         rm.iptables_manager.ipv4['filter'].add_chain(label_chain, wrap=False)
         rm.iptables_manager.ipv4['filter'].add_chain(rules_chain, wrap=False)
         rm.iptables_manager.ipv4['filter'].add_rule(
@@ -495,14 +496,27 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
                                                      routers_to_reconfigure,
                                                      traffic_counters):
         rm = self.routers.get(router['id'])
+        LOG.debug("Trying retrieve_and_account_traffic_counters_legacy with rm: {rm}".format(
+            rm=rm
+        ))
         if not rm:
+            LOG.debug("NOT RM with router: {router}".format(
+                router=router
+            ))
             return
 
+        LOG.debug("The router: {router} has metering labels: {metering_labels}".format(
+                router=router,
+                metering_labels=rm.metering_labels
+            ))
         for label_id in rm.metering_labels:
             chain_acc = self.retrieve_traffic_counters(label_id, rm, router,
                                                        routers_to_reconfigure)
 
             if not chain_acc:
+                LOG.debug("The router: {router} has NOT CHAIN_ACC".format(
+                    router=router
+                ))
                 continue
 
             acc = traffic_counters.get(label_id, {'pkts': 0, 'bytes': 0})
@@ -515,14 +529,25 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
     @staticmethod
     def retrieve_traffic_counters(label_id, rm, router,
                                   routers_to_reconfigure):
+        LOG.debug("Trying to retrieve_traffic_counters for label: {label} and router: {router}".format(
+            label=label_id,
+            router=router
+        ))
         try:
+            LOG.debug("inside the TRY in retrieve_traffic_counters...")
             chain = iptables_manager.get_chain_name(WRAP_NAME +
                                                     LABEL +
                                                     label_id,
                                                     wrap=False)
+            LOG.debug("The chain is: {chain}".format(
+                chain=chain
+            ))
 
             chain_acc = rm.iptables_manager.get_traffic_counters(
                 chain, wrap=False, zero=True)
+            LOG.debug("The chain_acc is: {chain_acc}".format(
+                chain_acc=chain_acc
+            ))
         except RuntimeError as e:
             LOG.warning('Failed to get traffic counters for router [%s] due '
                         'to [%s]. This error message can happen when routers '
