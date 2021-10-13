@@ -92,7 +92,9 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
                                                                 self.conf)
 
     def _metering_notification(self):
-        LOG.debug("Trying to _metering_notification...")
+        LOG.debug("Trying to _metering_notification with data: {data}".format(
+            data=self.metering_infos
+        ))
         for key, info in self.metering_infos.items():
             data = self.create_notification_message_data(info, key)
 
@@ -113,7 +115,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             info['time'] = 0
 
     def create_notification_message_data(self, info, key):
-        LOG.debug("Trying to create_notification_message_data...")
+        
         data = {'pkts': info['pkts'],
                 'bytes': info['bytes'],
                 'time': info['time'],
@@ -121,10 +123,16 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
                 'last_update': info['last_update'],
                 'host': self.host}
 
+        LOG.debug("Trying to create_notification_message_data with data: {data}".format(
+            data=data
+        ))
+
         if self.conf.granular_traffic_data:
+            LOG.debug("Inside create_notification_message_data and granular_traffic_data")
             data['resource_id'] = key
             self.set_project_id_for_granular_traffic_data(data, key)
         else:
+            LOG.debug("Inside create_notification_message_data and not granular_traffic_data")
             data['label_id'] = key
             data['tenant_id'] = self.label_tenant_id.get(key)
 
@@ -134,7 +142,9 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         return data
 
     def set_project_id_for_granular_traffic_data(self, data, key):
+        LOG.debu("Trying to set_project_id_for_granular_traffic_data")
         if driver.BASE_LABEL_TRAFFIC_COUNTER_KEY in key:
+            LOG.debug("Inside set_project_id_for_granular_traffic_data and BASE_LABEL_TRAFFIC_COUNTER_KEY")
             other_ids, actual_label_id = key.split(
                 driver.BASE_LABEL_TRAFFIC_COUNTER_KEY)
 
@@ -155,9 +165,11 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             else:
                 data['project_id'] = self.label_tenant_id.get(actual_label_id)
         elif driver.BASE_PROJECT_TRAFFIC_COUNTER_KEY in key:
+            LOG.debug("Inside set_project_id_for_granular_traffic_data and BASE_PROJECT_TRAFFIC_COUNTER_KEY")
             data['project_id'] = key.split(
                 driver.BASE_PROJECT_TRAFFIC_COUNTER_KEY)[1]
         elif driver.BASE_ROUTER_TRAFFIC_COUNTER_KEY in key:
+            LOG.debug("Inside set_project_id_for_granular_traffic_data and BASE_ROUTER_TRAFFIC_COUNTER_KEY")
             router_id = key.split(driver.BASE_ROUTER_TRAFFIC_COUNTER_KEY)[1]
             data['router_id'] = router_id
             self.configure_project_id_based_on_router(data, router_id)
@@ -167,37 +179,45 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
     def configure_project_id_shared_labels(self, data, key):
         LOG.debug("Trying to configure_project_id_shared_labels...")
         if driver.BASE_PROJECT_TRAFFIC_COUNTER_KEY in key:
+            LOG.debug("Inside configure_project_id_shared_labels and BASE_PROJECT_TRAFFIC_COUNTER_KEY")
             project_id = key.split(driver.BASE_PROJECT_TRAFFIC_COUNTER_KEY)[1]
 
             data['project_id'] = project_id
         elif driver.BASE_ROUTER_TRAFFIC_COUNTER_KEY in key:
+            LOG.debug("Inside configure_project_id_shared_labels and BASE_ROUTER_TRAFFIC_COUNTER_KEY")
             router_id = key.split(driver.BASE_ROUTER_TRAFFIC_COUNTER_KEY)[1]
 
             data['router_id'] = router_id
             self.configure_project_id_based_on_router(data, router_id)
         else:
+            LOG.debug("Inside configure_project_id_shared_labels and ELSE")
             data['project_id'] = 'all'
 
     def configure_project_id_based_on_router(self, data, router_id):
         LOG.debug("Trying to configure_project_id_based_on_router...")
         if router_id in self.routers:
+            LOG.debug("Inside configure_project_id_based_on_router and IF")
             router = self.routers[router_id]
             data['project_id'] = router['tenant_id']
         else:
             LOG.warning("Could not find router with ID [%s].", router_id)
 
     def _purge_metering_info(self):
-        LOG.debug("Trying to _purge_metering_info...")
+        
         deadline_timestamp = timeutils.utcnow_ts() - self.conf.report_interval
         expired_metering_info_key = [
             key for key, info in self.metering_infos.items()
             if info['last_update'] < deadline_timestamp]
+        
+        LOG.debug("Trying to _purge_metering_info with data: {data}".format(
+            data=expired_metering_info_key
+        ))
 
         for key in expired_metering_info_key:
             del self.metering_infos[key]
 
     def _add_metering_info(self, key, traffic_counter):
-        LOG.debug("Trying to _add_metering_info...")
+        
         granularity = traffic_counter.get('traffic-counter-granularity')
 
         ts = timeutils.utcnow_ts()
@@ -211,6 +231,12 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         info['last_update'] = ts
 
         self.metering_infos[key] = info
+
+        LOG.debug("Trying to _add_metering_info, with granularity {granularity}, ts {ts}, info {info} ".format(
+            granularity=granularity,
+            ts=ts,
+            info=info
+        ))
 
         return info
 
@@ -231,9 +257,11 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         LOG.debug("Traffic counters [%s] retrieved for routers [%s].",
                   traffic_counters, self.routers)
         if not traffic_counters:
+            LOG.debug("Inside _add_metering_infos not traffic_counters")
             return
 
         for key, traffic_counter in traffic_counters.items():
+            LOG.debug("Inside _add_metering_infos THERE ARE traffic_counters")
             self._add_metering_info(key, traffic_counter)
 
     def _metering_loop(self):
@@ -246,6 +274,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
 
         report_interval = self.conf.report_interval
         if delta >= report_interval:
+            LOG.debug("Inside _metering_loop and report_interval")
             self._metering_notification()
             self._purge_metering_info()
             self.last_report = ts
@@ -254,6 +283,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
     def _invoke_driver(self, context, meterings, func_name):
         LOG.debug("Trying to _invoke_driver...")
         try:
+            LOG.debug("Inside _invoke_driver and TRY")
             return getattr(self.metering_driver, func_name)(context, meterings)
         except AttributeError:
             LOG.exception("Driver %(driver)s does not implement %(func)s",
@@ -266,7 +296,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
 
     @periodic_task.periodic_task(run_immediately=True)
     def _sync_routers_task(self, context):
-        LOG.debug("Trying to _sync_routers_task...")
+        
         routers = self._get_sync_data_metering(self.context)
 
         routers_on_agent = set(self.routers.keys())
@@ -276,7 +306,12 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             del self.routers[router_id]
             self._invoke_driver(context, router_id, 'remove_router')
 
+        LOG.debug("Inside _sync_routers_task with data: {data}".format(
+            data=routers
+        ))
+
         if not routers:
+            LOG.debug("Inside _sync_routers_task NOT routers")
             return
         self._update_routers(context, routers)
 
@@ -293,17 +328,23 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
     def routers_updated(self, context, routers=None):
         LOG.debug("Trying to routers_updated...")
         if not routers:
+            LOG.debug("Inside routers_updated and NOT ROUTERS 1")
             routers = self._get_sync_data_metering(self.context)
         if not routers:
+            LOG.debug("Inside routers_updated and NOT ROUTERS 2")
             return
         self._update_routers(context, routers)
 
     def _update_routers(self, context, routers):
-        LOG.debug("Trying to _update_routers...")
+        
         for router in routers:
             self.routers[router['id']] = router
 
             self.store_metering_labels(router)
+
+        LOG.debug("Trying to _update_routers with data: {data}".format(
+            data=routers
+        ))
 
         return self._invoke_driver(context, routers,
                                    'update_routers')
@@ -341,8 +382,11 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
                                    'add_metering_label')
 
     def store_metering_labels(self, router):
-        LOG.debug("Trying to store_metering_labels...")
+        
         labels = router[constants.METERING_LABEL_KEY]
+        LOG.debug("Trying to store_metering_labels with data: {data}".format(
+            data=labels
+        ))
         for label in labels:
             self.metering_labels[label['id']] = label
 
@@ -357,6 +401,10 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
                 if label['id'] in self.metering_labels.keys():
                     del self.metering_labels[label['id']]
 
+        LOG.debug("Inside remove_metering_label with data {data}".format(
+            data=routers
+        ))
+
         return self._invoke_driver(context, routers,
                                    'remove_metering_label')
 
@@ -364,7 +412,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
 class MeteringAgentWithStateReport(MeteringAgent):
 
     def __init__(self, host, conf=None):
-        LOG.debug("Trying to create MeteringAgentWithStateReport...")
+        
         super(MeteringAgentWithStateReport, self).__init__(host=host,
                                                            conf=conf)
         self.state_rpc = agent_rpc.PluginReportStateAPI(topics.REPORTS)
@@ -387,6 +435,11 @@ class MeteringAgentWithStateReport(MeteringAgent):
             self.heartbeat = loopingcall.FixedIntervalLoopingCall(
                 self._report_state)
             self.heartbeat.start(interval=report_interval)
+
+        LOG.debug("Trying to create MeteringAgentWithStateReport with data: {data} and REPORT_INTERVAL: {report_interval}".format(
+            data=self.agent_state,
+            report_interval=report_interval
+        ))
 
     def _report_state(self):
         LOG.debug("Trying to _report_state...")
