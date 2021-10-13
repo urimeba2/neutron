@@ -280,6 +280,7 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
 
     def _process_ns_specific_metering_label(self, router, ext_dev, im):
         '''Process metering label based on the associated namespaces.'''
+        LOG.debug("Trying _process_ns_specific_metering_label...")
         rm = self.routers.get(router['id'])
         with IptablesManagerTransaction(im):
             labels = router.get(constants.METERING_LABEL_KEY, [])
@@ -384,6 +385,7 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
 
     def _process_metering_rule_action_based_on_ns(self, router, action,
                                                   ext_dev, im):
+        LOG.debug("Trying _process_metering_rule_action_based_on_ns...")
         '''Process metering rule actions based specific namespaces.'''
         rm = self.routers.get(router['id'])
         with IptablesManagerTransaction(im):
