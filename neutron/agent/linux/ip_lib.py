@@ -920,6 +920,7 @@ def list_network_namespaces(**kwargs):
 
     :param kwargs: Callers add any filters they use as kwargs
     """
+    LOG.debug("Trying list_network_namespaces...")
     if cfg.CONF.AGENT.use_helper_for_ns_read:
         return privileged.list_netns(**kwargs)
     else:
