@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+from logging import debug
 from neutron_lib import constants
 from oslo_config import cfg
 from oslo_log import helpers as log_helpers
@@ -83,9 +84,16 @@ class RouterWithMetering(object):
         Returns True if any manager is created
         """
 
+        LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER for router: {router}".format(
+            router=self.router
+        ))
+
         created = False
 
         if self.router['distributed'] and self.snat_iptables_manager is None:
+            LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER for router: {router}, inside IF1".format(
+                router=self.router
+                ))
             # If distributed routers then we need to apply the
             # metering agent label rules in the snat namespace as well.
             snat_ns_name = dvr_snat_ns.SnatNamespace.get_snat_ns_name(
@@ -102,12 +110,18 @@ class RouterWithMetering(object):
                 created = True
 
         if self.iptables_manager is None:
+            LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER for router: {router}, inside IF2".format(
+                router=self.router
+                ))
             # Check of namespace existence before we assign the
             # iptables_manager
             # NOTE(Swami): If distributed routers, all external traffic on a
             # compute node will flow through the rfp interface in the router
             # namespace.
             if ip_lib.network_namespace_exists(self.ns_name):
+                LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER for router: {router}, inside IF3".format(
+                    router=self.router
+                    ))
                 self.iptables_manager = iptables_manager.IptablesManager(
                     namespace=self.ns_name,
                     binary_name=WRAP_NAME,
@@ -115,6 +129,11 @@ class RouterWithMetering(object):
                     use_ipv6=netutils.is_ipv6_enabled())
 
                 created = True
+
+        LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER for router: {router}, OUTSIDE ANY IF WITH CREATED: {created}".format(
+                router=self.router,
+                created=created
+                ))
 
         return created
 
