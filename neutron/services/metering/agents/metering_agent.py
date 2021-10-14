@@ -128,11 +128,12 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         ))
 
         if self.conf.granular_traffic_data:
+            
+            data['resource_id'] = key
             LOG.debug("Inside create_notification_message_data and granular_traffic_data, and data: {data}, and key: {key}".format(
                 data=data,
                 key=key
             ))
-            data['resource_id'] = key
             self.set_project_id_for_granular_traffic_data(data, key)
         else:
             LOG.debug("Inside create_notification_message_data and not granular_traffic_data")
