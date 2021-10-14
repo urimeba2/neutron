@@ -903,6 +903,7 @@ def create_network_namespace(namespace, **kwargs):
     :param namespace: The name of the namespace to create
     :param kwargs: Callers add any filters they use as kwargs
     """
+    LOG.debug("Trying create_network_namespace in IP_LIB.PY in NEUTRON/AGENT/LINUX")
     privileged.create_netns(namespace, **kwargs)
 
 

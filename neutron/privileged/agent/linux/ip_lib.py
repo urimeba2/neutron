@@ -538,6 +538,7 @@ def create_netns(name, **kwargs):
 
     :param name: The name of the namespace to create
     """
+    LOG.debug("Trying create_network_namespace in IP_LIB.PY in NEUTRON/PRIVILEGED/AGENT/LINUX")
     pid = os.fork()
     if pid == 0:
         try:

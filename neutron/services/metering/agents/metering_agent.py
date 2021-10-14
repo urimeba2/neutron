@@ -390,6 +390,10 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         for label in labels:
             self.metering_labels[label['id']] = label
 
+        LOG.debug("store_metering_labels suceed with self.metering_labels as: {data}".format(
+            data=self.metering_labels
+        ))
+
     def remove_metering_label(self, context, routers):
         self._add_metering_infos()
         LOG.debug("Delete a metering label from agent with parameters ["

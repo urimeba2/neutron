@@ -398,7 +398,9 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
         self._process_metering_rule_action(router, 'delete')
 
     def _create_metering_label_chain(self, rm, label_chain, rules_chain):
-        LOG.debug("Creating label_chain in IPTABLES_DRIVER")
+        LOG.debug("Creating label_chain in IPTABLES_DRIVER, WITH ROUTER: {router}".format(
+            router=rm.__dict__
+        ))
         rm.iptables_manager.ipv4['filter'].add_chain(label_chain, wrap=False)
         rm.iptables_manager.ipv4['filter'].add_chain(rules_chain, wrap=False)
         rm.iptables_manager.ipv4['filter'].add_rule(
@@ -702,8 +704,12 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
 
     @log_helpers.log_method_call
     def sync_router_namespaces(self, context, routers):
+        
         for router in routers:
             rm = self.routers.get(router['id'])
+            LOG.debug("Trying to sync_router_namespaces inside IPTABLES_DRIVERS, with router: {router}".format(
+                router=router
+            ))
             if not rm:
                 continue
 
@@ -713,4 +719,7 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
             # create the managers for them. When a new manager is created, the
             # metering rules have to be added to it.
             if rm.create_iptables_managers():
+                LOG.debug("Trying to sync_router_namespaces inside IPTABLES_DRIVERS, with router: {router} INSIDE RMIF1".format(
+                    router=router
+                ))
                 self._process_associate_metering_label(router)
