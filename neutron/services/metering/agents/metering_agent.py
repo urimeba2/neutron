@@ -128,7 +128,10 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         ))
 
         if self.conf.granular_traffic_data:
-            LOG.debug("Inside create_notification_message_data and granular_traffic_data")
+            LOG.debug("Inside create_notification_message_data and granular_traffic_data, and data: {data}, and key: {key}".format(
+                data=data,
+                key=key
+            ))
             data['resource_id'] = key
             self.set_project_id_for_granular_traffic_data(data, key)
         else:
@@ -261,7 +264,9 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
             return
 
         for key, traffic_counter in traffic_counters.items():
-            LOG.debug("Inside _add_metering_infos THERE ARE traffic_counters")
+            LOG.debug("Inside _add_metering_infos THERE ARE traffic_counters: {traffic_counters}".format(
+                traffic_counters=traffic_counter
+            ))
             self._add_metering_info(key, traffic_counter)
 
     def _metering_loop(self):
