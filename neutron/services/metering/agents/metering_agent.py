@@ -142,7 +142,7 @@ class MeteringAgent(MeteringPluginRpc, manager.Manager):
         return data
 
     def set_project_id_for_granular_traffic_data(self, data, key):
-        LOG.debu("Trying to set_project_id_for_granular_traffic_data")
+        LOG.debug("Trying to set_project_id_for_granular_traffic_data")
         if driver.BASE_LABEL_TRAFFIC_COUNTER_KEY in key:
             LOG.debug("Inside set_project_id_for_granular_traffic_data and BASE_LABEL_TRAFFIC_COUNTER_KEY")
             other_ids, actual_label_id = key.split(
