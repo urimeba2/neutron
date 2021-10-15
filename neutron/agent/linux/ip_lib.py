@@ -926,7 +926,9 @@ def list_network_namespaces(**kwargs):
         kwargs=dict_kwargs
     ))
     if cfg.CONF.AGENT.use_helper_for_ns_read:
-        LOG.debug("Trying list_network_namespaces inside IF1")
+        LOG.debug("Trying list_network_namespaces inside IF1, with response: {response}".format(
+            response=privileged.list_netns(**kwargs)
+        ))
         return privileged.list_netns(**kwargs)
     else:
         LOG.debug("Trying list_network_namespaces inside ELSE")
