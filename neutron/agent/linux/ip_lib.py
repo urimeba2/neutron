@@ -921,7 +921,10 @@ def list_network_namespaces(**kwargs):
 
     :param kwargs: Callers add any filters they use as kwargs
     """
-    LOG.debug("Trying list_network_namespaces...")
+    dict_kwargs =  ', '.join(['{}={!r}'.format(k, v) for k, v in kwargs.items()])
+    LOG.debug("Trying list_network_namespaces with kwargs: {kwargs}...".format(
+        kwargs=dict_kwargs
+    ))
     if cfg.CONF.AGENT.use_helper_for_ns_read:
         LOG.debug("Trying list_network_namespaces inside IF1")
         return privileged.list_netns(**kwargs)
