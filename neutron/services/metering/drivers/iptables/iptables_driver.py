@@ -373,6 +373,7 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
 
     @log_helpers.log_method_call
     def add_metering_label(self, context, routers):
+        LOG.debug("Trying add_metering_label inside IPTABLES_DRIVER")
         for router in routers:
             self._process_associate_metering_label(router)
 
