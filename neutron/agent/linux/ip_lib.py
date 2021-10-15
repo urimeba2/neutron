@@ -936,7 +936,10 @@ def network_namespace_exists(namespace, try_is_ready=False, **kwargs):
                          is ready to be operated.
     :param kwargs: Callers add any filters they use as kwargs
     """
+    LOG.debug("Trying network_namespace_exists...")
+
     if not try_is_ready:
+        LOG.debug("Trying network_namespace_exists inside try_is_ready")
         output = list_network_namespaces(**kwargs)
         return namespace in output
 
