@@ -573,6 +573,11 @@ def list_netns(**kwargs):
 
     Caller requires raised priveleges to list namespaces
     """
+    dict_kwargs =  ', '.join(['{}={!r}'.format(k, v) for k, v in kwargs.items()])
+    LOG.debug("Trying list_netns inside IP_LIB with args: {args}, and response like: {response}".format(
+        args=dict_kwargs,
+        response=netns.listnetns(**kwargs)
+    ))
     return netns.listnetns(**kwargs)
 
 
