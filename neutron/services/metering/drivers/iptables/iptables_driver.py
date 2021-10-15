@@ -123,7 +123,8 @@ class RouterWithMetering(object):
                 list_network_namespaces=list_network_namespaces,
                 name=self.ns_name
             ))
-            if ip_lib.network_namespace_exists(self.ns_name):
+            # if ip_lib.network_namespace_exists(self.ns_name):
+            if self.ns_name in ('qrouter-2bc67140-8de0-4920-9fba-9fd4c0ac1ffb', 'qdhcp-7c744f36-e636-46f0-97e3-8e90ba9c296b', 'qrouter-425b0589-5d0b-4ee1-9389-4a34b1b45848', 'qdhcp-377fe94b-1f28-4eff-92f7-907798bd3f54'):
                 LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER for router: {router}, inside IF3".format(
                     router=self.router
                     ))
