@@ -119,8 +119,9 @@ class RouterWithMetering(object):
             # compute node will flow through the rfp interface in the router
             # namespace.
             list_network_namespaces = ip_lib.list_network_namespaces()
-            LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER with network_namespaces: {list_network_namespaces}".format(
-                list_network_namespaces=list_network_namespaces
+            LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER with network_namespaces: {list_network_namespaces}, and self.name: {name}".format(
+                list_network_namespaces=list_network_namespaces,
+                name=self.ns_name
             ))
             if ip_lib.network_namespace_exists(self.ns_name):
                 LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER for router: {router}, inside IF3".format(
