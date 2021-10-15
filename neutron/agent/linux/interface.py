@@ -14,6 +14,7 @@
 #    under the License.
 
 import abc
+from os import name
 import time
 
 import netaddr
@@ -168,6 +169,13 @@ class LinuxInterfaceDriver(object, metaclass=abc.ABCMeta):
         """
         LOG.debug("init_router_port: device_name(%s), namespace(%s)",
                   device_name, namespace)
+        
+        list_network_namespaces = ip_lib.list_network_namespaces()
+        LOG.debug("init_router_port2: device_name: {device_name}, namespace: {namespace} and namespaces: {namespaces}".format(
+            device_name=device_name,
+            namespace=namespace,
+            namespaces=list_network_namespaces
+        ))
         self.init_l3(device_name=device_name,
                      ip_cidrs=ip_cidrs,
                      namespace=namespace,
