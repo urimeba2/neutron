@@ -339,10 +339,23 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
             rm=rm.__dict__
         ))
 
+        if rm.iptables_manager:
+            LOG.debug("Trying _process_associate_metering_label inside IPTABLES_DRIVER with rm: {rm} and iptables-manage {iptables_manager}".format(
+                rm=rm.__dict__,
+                iptables_manager=rm.iptables_manager
+            ))
+
+
         ext_dev, ext_snat_dev = self.get_external_device_names(rm)
+        LOG.debug("Trying _process_associate_metering_label inside IPTABLES_DRIVER with ext_dev: {ext_dev} and ext_snat_dev {ext_snat_dev}".format(
+            ext_dev=ext_dev,
+            ext_snat_dev=ext_snat_dev
+        ))
+
         for (im, dev) in [(rm.iptables_manager, ext_dev),
                           (rm.snat_iptables_manager, ext_snat_dev)]:
             if im:
+                LOG.debug("Inside _process_associate_metering_label in IM")
                 self._process_ns_specific_metering_label(router, dev, im)
 
     def _process_ns_specific_disassociate_metering_label(self, router, im):
