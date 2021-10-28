@@ -88,6 +88,7 @@ class PluginReportStateAPI(object):
         return cctxt.call(context, 'has_alive_neutron_server', **kwargs)
 
     def report_state(self, context, agent_state, use_call=False):
+        LOG.debug('Trying report_state')
         cctxt = self.client.prepare(
             timeout=lib_rpc.TRANSPORT.conf.rpc_response_timeout)
         # add unique identifier to a report

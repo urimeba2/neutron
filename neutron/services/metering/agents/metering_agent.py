@@ -454,10 +454,12 @@ class MeteringAgentWithStateReport(MeteringAgent):
     def _report_state(self):
         LOG.debug("Trying to _report_state...")
         try:
+            
             self.state_rpc.report_state(self.context, self.agent_state,
                                         self.use_call)
             self.agent_state.pop('start_flag', None)
             self.use_call = False
+            LOG.debug("Trying to _report_state inside TRY")
         except AttributeError:
             # This means the server does not support report_state
             LOG.warning("Neutron server does not support state report. "
