@@ -163,6 +163,9 @@ class IptablesTable(object):
         name = get_chain_name(name, wrap)
         if wrap:
             self.chains.add(name)
+            LOG.debug("Final chains: {chains}".format(
+                chains=self.chains
+                ))
         else:
             self.unwrapped_chains.add(name)
 
@@ -752,6 +755,7 @@ class IptablesManager(object):
         return new_filter
 
     def _get_traffic_counters_cmd_tables(self, chain, wrap=True):
+        LOG.debug('Trying _get_traffic_counters_cmd_tables')
         name = get_chain_name(chain, wrap)
 
         cmd_tables = [('iptables', key) for key, table in self.ipv4.items()
@@ -765,6 +769,7 @@ class IptablesManager(object):
         return cmd_tables
 
     def get_traffic_counters(self, chain, wrap=True, zero=False):
+        LOG.debug('Trying get_traffic_counters inside IPTABLES_MANAGER')
         """Return the sum of the traffic counters of all rules of a chain."""
         cmd_tables = self._get_traffic_counters_cmd_tables(chain, wrap)
         if not cmd_tables:
