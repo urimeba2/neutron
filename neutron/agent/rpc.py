@@ -101,6 +101,10 @@ class PluginReportStateAPI(object):
             'time': datetime.utcnow().strftime(constants.ISO8601_TIME_FORMAT),
         }
         method = cctxt.call if use_call else cctxt.cast
+        LOG.debug('End of report_state, with kwargs: {kwargs} and method: {method}'.format(
+            kwargs=kwargs,
+            method=method
+        ))
         return method(context, 'report_state', **kwargs)
 
 
