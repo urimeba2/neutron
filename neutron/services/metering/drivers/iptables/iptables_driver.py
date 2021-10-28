@@ -220,9 +220,12 @@ class IptablesMeteringDriver(abstract_driver.MeteringAbstractDriver):
 
     def _process_metering_label_rules(self, rules, label_chain,
                                       rules_chain, ext_dev, im):
+        LOG.debug('Inside _process_metering_label_rules')
         if not ext_dev:
+            LOG.debug('Inside _process_metering_label_rules inside NOT EXT_DEV')
             return
         for rule in rules:
+            LOG.debug('Inside _process_metering_label_rules inside rule in rules')
             self._add_rule_to_chain(ext_dev, rule, im,
                                     label_chain, rules_chain)
 
