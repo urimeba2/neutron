@@ -769,7 +769,7 @@ class IptablesManager(object):
         return cmd_tables
 
     def get_traffic_counters(self, chain, wrap=True, zero=False):
-        LOG.debug('Trying get_traffic_counters inside IPTABLES_MANAGER')
+        
         """Return the sum of the traffic counters of all rules of a chain."""
         cmd_tables = self._get_traffic_counters_cmd_tables(chain, wrap)
         if not cmd_tables:
@@ -779,6 +779,11 @@ class IptablesManager(object):
 
         name = get_chain_name(chain, wrap)
         acc = {'pkts': 0, 'bytes': 0}
+
+        LOG.debug('Trying get_traffic_counters inside IPTABLES_MANAGER, with name: {name} and acc: {acc}'.format(
+            name=name,
+            acc=acc
+        ))
 
         for cmd, table in cmd_tables:
             args = [cmd, '-t', table, '-L', name, '-n', '-v', '-x',
