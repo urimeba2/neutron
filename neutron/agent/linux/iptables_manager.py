@@ -86,8 +86,10 @@ def comment_rule(rule, comment):
 
 
 def get_chain_name(chain_name, wrap=True):
-    LOG.debug("Inside get_chain_name in IPTABLES_MANAGER.PY, with wrap: {wrap}".format(
-        wrap=wrap
+    LOG.debug("Inside get_chain_name in IPTABLES_MANAGER.PY, with chain_name {chain_name} and wrap: {wrap}".format(
+        chain_name=chain_name,
+        wrap=wrap,
+
     ))
     if wrap:
         return chain_name[:constants.MAX_IPTABLES_CHAIN_LEN_WRAP]
