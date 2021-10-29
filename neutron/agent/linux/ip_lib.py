@@ -948,7 +948,8 @@ def network_namespace_exists(namespace, try_is_ready=False, **kwargs):
     if not try_is_ready:
         
         output = list_network_namespaces(**kwargs)
-        LOG.debug("Trying network_namespace_exists inside try_is_ready with output: {output}".format(
+        LOG.debug("Trying network_namespace_exists inside try_is_ready with namespace: {namespace} and with output: {output}".format(
+            namespace=namespace,
             output=output
         ))
         return namespace in output
