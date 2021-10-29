@@ -123,8 +123,8 @@ class RouterWithMetering(object):
                 list_network_namespaces=list_network_namespaces,
                 name=self.ns_name
             ))
-            if ip_lib.network_namespace_exists(self.ns_name):
-            # if True:
+            # if ip_lib.network_namespace_exists(self.ns_name):
+            if True:
                 LOG.debug("Trying create_iptables_managers inside IPTABLES_DRIVER for router: {router}, inside IF3".format(
                     router=self.router
                     ))
