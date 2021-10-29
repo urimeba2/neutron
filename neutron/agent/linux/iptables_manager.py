@@ -158,11 +158,15 @@ class IptablesTable(object):
         it'll actually end up being named 'neutron-openvswi-OUTPUT'.
 
         """
-        LOG.debug("Adding chain with name: {name} and wrap: {wrap}".format(
-            name=name,
-            wrap=wrap
-        ))
+        name2 = name
+        
         name = get_chain_name(name, wrap)
+
+        LOG.debug("Adding chain with param name: {name2} and wrap: {wrap} and get_chaine_name: {name}".format(
+            name=name,
+            wrap=wrap,
+            name2=name2
+        ))
         if wrap:
             self.chains.add(name)
             LOG.debug("Final chains: {chains}".format(

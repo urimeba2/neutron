@@ -43,6 +43,7 @@ class MeteringPlugin(metering_db.MeteringDbMixin):
 
     def __init__(self):
         super(MeteringPlugin, self).__init__()
+        LOG.debug('Starting MeteringPlugin')
 
         self.meter_rpc = metering_rpc_agent_api.MeteringAgentNotifyAPI()
         rpc_worker = service.RpcWorker([self], worker_process_count=0)
@@ -50,6 +51,7 @@ class MeteringPlugin(metering_db.MeteringDbMixin):
         self.add_worker(rpc_worker)
 
     def start_rpc_listeners(self):
+        LOG.debug('Trying start_rpc_listeners')
         self.endpoints = [metering_rpc.MeteringRpcCallbacks(self)]
         self.conn = n_rpc.Connection()
         self.conn.create_consumer(
