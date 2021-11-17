@@ -127,25 +127,25 @@ def execute(cmd, process_input=None, addl_env=None,
             LOG.debug('Inside execute IF-A')
             _process_input = encodeutils.to_utf8(process_input)
         else:
-            LOG.debug('Inside execute ELSE-A')
+            LOG.debug('Inside execute ELSE-B')
             _process_input = None
 
         if run_as_root and privsep_exec:
-            LOG.debug('Inside execute IF-B')
+            LOG.debug('Inside execute IF-C')
             _stdout, _stderr, returncode = priv_utils.execute_process(
                 cmd, _process_input, addl_env)
         elif run_as_root and cfg.CONF.AGENT.root_helper_daemon:
-            LOG.debug('Inside execute IF-C')
+            LOG.debug('Inside execute IF-D')
             _stdout, _stderr, returncode = execute_rootwrap_daemon(
                 cmd, process_input, addl_env)
         else:
-            LOG.debug('Inside execute ELSE-B')
+            LOG.debug('Inside execute ELSE-E')
             _stdout, _stderr, returncode = _execute_process(
                 cmd, _process_input, addl_env, run_as_root)
 
         extra_ok_codes = extra_ok_codes or []
         if returncode and returncode not in extra_ok_codes:
-            LOG.debug('Inside execute IF-D')
+            LOG.debug('Inside execute IF-F')
             msg = ("Exit code: %(returncode)d; "
                    "Cmd: %(cmd)s; "
                    "Stdin: %(stdin)s; "
@@ -158,14 +158,14 @@ def execute(cmd, process_input=None, addl_env=None,
                         'stderr': _stderr})
 
             if log_fail_as_error:
-                LOG.debug('Inside execute IF-E')
+                LOG.debug('Inside execute IF-G')
                 LOG.error(msg)
             if check_exit_code:
-                LOG.debug('Inside execute IF-F')
+                LOG.debug('Inside execute IF-H')
                 raise exceptions.ProcessExecutionError(msg,
                                                        returncode=returncode)
     finally:
-        LOG.debug('Inside execute IF-G')
+        LOG.debug('Inside execute IF-I')
         # NOTE(termie): this appears to be necessary to let the subprocess
         #               call clean something up in between calls, without
         #               it two execute calls in a row hangs the second one
