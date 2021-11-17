@@ -165,7 +165,7 @@ def execute(cmd, process_input=None, addl_env=None,
                 raise exceptions.ProcessExecutionError(msg,
                                                        returncode=returncode)
     finally:
-        LOG.debug('Inside execute IFG')
+        LOG.debug('Inside execute IF-G')
         # NOTE(termie): this appears to be necessary to let the subprocess
         #               call clean something up in between calls, without
         #               it two execute calls in a row hangs the second one

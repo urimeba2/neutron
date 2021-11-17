@@ -81,4 +81,9 @@ def _create_process(cmd, addl_env=None):
     cmd = list(map(str, _addl_env_args(addl_env) + list(cmd)))
     obj = subprocess.Popen(cmd, shell=False, stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    print('Creating process inside _create_process with cmd: {cmd} and object: {obj}'.format(
+        cmd=cmd,
+        obj=obj
+    ))
     return obj, cmd
