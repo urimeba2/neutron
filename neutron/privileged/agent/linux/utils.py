@@ -55,24 +55,32 @@ def delete_if_exists(path, remove=os.unlink):
 
 @privileged.default.entrypoint
 def execute_process(cmd, _process_input, addl_env):
+    a = cmd
+    b = _process_input
+    c = addl_env
     LOG.debug('Inside execute_process with cmd: {cmd} , _process_input: {process_input} and addl_env: {addl_env}'.format(
-        cmd=cmd,
-        process_input=_process_input,
-        addl_env=addl_env
+        cmd=a,
+        process_input=b,
+        addl_env=c
     ))
     obj, cmd = _create_process(cmd, addl_env=addl_env)
+    d = obj
+    e = cmd
     LOG.debug('Creating process inside execute_process with cmd: {cmd} and object: {obj}'.format(
-        cmd=cmd,
-        obj=obj
+        cmd=e,
+        obj=d
     ))
     _stdout, _stderr = obj.communicate(_process_input)
-    
     returncode = obj.returncode
 
+    f = _stdout
+    g = _stderr
+    h = returncode
+
     LOG.debug('Creating process inside execute_process with _stdout: {stdout} and _stderr: {stderr} and returncode: {returncode}'.format(
-        stdout=_stdout,
-        stderr=_stderr, 
-        returncode=returncode
+        stdout=f,
+        stderr=g, 
+        returncode=h
     ))
     obj.stdin.close()
     _stdout = helpers.safe_decode_utf8(_stdout)
