@@ -55,33 +55,35 @@ def delete_if_exists(path, remove=os.unlink):
 
 @privileged.default.entrypoint
 def execute_process(cmd, _process_input, addl_env):
-    # a = cmd
-    # b = _process_input
-    # c = addl_env
-    # LOG.debug('Inside execute_process with cmd: {cmd} , _process_input: {process_input} and addl_env: {addl_env}'.format(
-    #     cmd=a,
-    #     process_input=b,
-    #     addl_env=c
-    # ))
+    import copy
+    a = copy.deepcopy(cmd)
+    b = copy.deepcopy(_process_input)
+    c = copy.deepcopy(addl_env)
+    LOG.debug('Inside execute_process with cmd: {cmd} , _process_input: {process_input} and addl_env: {addl_env}'.format(
+        cmd=a,
+        process_input=b,
+        addl_env=c
+    ))
     obj, cmd = _create_process(cmd, addl_env=addl_env)
-    # d = obj
-    # e = cmd
-    # LOG.debug('Creating process inside execute_process with cmd: {cmd} and object: {obj}'.format(
-    #     cmd=e,
-    #     obj=d
-    # ))
+
+    d = copy.deepcopy(obj)
+    e = copy.deepcopy(cmd)
+    LOG.debug('Creating process inside execute_process with cmd: {cmd} and object: {obj}'.format(
+        cmd=e,
+        obj=d
+    ))
     _stdout, _stderr = obj.communicate(_process_input)
     returncode = obj.returncode
 
-    # f = _stdout
-    # g = _stderr
-    # h = returncode
+    f = copy.deepcopy(_stdout)
+    g = copy.deepcopy(_stderr)
+    h = copy.deepcopy(returncode)
 
-    # LOG.debug('Creating process inside execute_process with _stdout: {stdout} and _stderr: {stderr} and returncode: {returncode}'.format(
-    #     stdout=f,
-    #     stderr=g, 
-    #     returncode=h
-    # ))
+    LOG.debug('Creating process inside execute_process with _stdout: {stdout} and _stderr: {stderr} and returncode: {returncode}'.format(
+        stdout=f,
+        stderr=g, 
+        returncode=h
+    ))
     obj.stdin.close()
     _stdout = helpers.safe_decode_utf8(_stdout)
     _stderr = helpers.safe_decode_utf8(_stderr)
