@@ -158,7 +158,9 @@ def execute(cmd, process_input=None, addl_env=None,
                         'stderr': _stderr})
 
             if log_fail_as_error:
-                LOG.debug('Inside execute IF-G')
+                LOG.debug('Inside execute IF-G with extra_ok_codes: {extra_ok_codes}'.format(
+                    extra_ok_codes=extra_ok_codes
+                ))
                 LOG.error(msg)
             if check_exit_code:
                 LOG.debug('Inside execute IF-H')
