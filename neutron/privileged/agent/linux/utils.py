@@ -14,6 +14,7 @@
 
 import os
 import re
+from sys import stderr
 
 from eventlet.green import subprocess
 from neutron_lib.utils import helpers
@@ -21,6 +22,7 @@ from oslo_concurrency import processutils
 from oslo_utils import fileutils
 
 from neutron import privileged
+from neutron.agent.linux.ip_lib import LOG
 
 
 NETSTAT_PIDS_REGEX = re.compile(r'.* (?P<pid>\d{2,6})/.*')
@@ -53,9 +55,25 @@ def delete_if_exists(path, remove=os.unlink):
 
 @privileged.default.entrypoint
 def execute_process(cmd, _process_input, addl_env):
+    LOG.debug('Inside execute_process with cmd: {cmd} , _process_input: {process_input} and addl_env: {addl_env}'.format(
+        cmd=cmd,
+        process_input=_process_input,
+        addl_env=addl_env
+    ))
     obj, cmd = _create_process(cmd, addl_env=addl_env)
+    LOG.debug('Creating process inside execute_process with cmd: {cmd} and object: {obj}'.format(
+        cmd=cmd,
+        obj=obj
+    ))
     _stdout, _stderr = obj.communicate(_process_input)
+    
     returncode = obj.returncode
+
+    LOG.debug('Creating process inside execute_process with _stdout: {stdout} and _stderr: {stderr} and returncode: {returncode}'.format(
+        stdout=_stdout,
+        stderr=_stderr, 
+        returncode=returncode
+    ))
     obj.stdin.close()
     _stdout = helpers.safe_decode_utf8(_stdout)
     _stderr = helpers.safe_decode_utf8(_stderr)
@@ -82,8 +100,5 @@ def _create_process(cmd, addl_env=None):
     obj = subprocess.Popen(cmd, shell=False, stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    print('Creating process inside _create_process with cmd: {cmd} and object: {obj}'.format(
-        cmd=cmd,
-        obj=obj
-    ))
+    
     return obj, cmd
