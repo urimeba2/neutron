@@ -127,8 +127,13 @@ def execute(cmd, process_input=None, addl_env=None,
             LOG.debug('Inside execute IF-A')
             _process_input = encodeutils.to_utf8(process_input)
         else:
-            LOG.debug('Inside execute ELSE-B')
+            
             _process_input = None
+            LOG.debug('Inside execute ELSE-B with _process_input: {process_input} and cmd: {cmd} and  addl_env: {addl_env}'.format(
+                process_input=_process_input,
+                cmd=cmd,
+                addl_env=addl_env
+            ))
 
         if run_as_root and privsep_exec:
             LOG.debug('Inside execute IF-C')
