@@ -35,17 +35,17 @@ metering_agent_opts = [
                 ),
     
     # SSH data for Metering
-    cfg.StrOpt('ssh_hostname',
-               help=_("IP for SSH for Metering")),
+    # cfg.StrOpt('ssh_hostname',
+    #            help=_("IP for SSH for Metering")),
 
-    cfg.StrOpt('ssh_port',
-               help=_("Port for SSH for Metering")),
+    # cfg.StrOpt('ssh_port',
+    #            help=_("Port for SSH for Metering")),
 
-    cfg.StrOpt('ssh_username',
-               help=_("Username for SSH for Metering")),
+    # cfg.StrOpt('ssh_username',
+    #            help=_("Username for SSH for Metering")),
 
-    cfg.StrOpt('ssh_password',
-               help=_("Passord for SSH for Metering")),
+    # cfg.StrOpt('ssh_password',
+    #            help=_("Passord for SSH for Metering")),
 
     
 ]
