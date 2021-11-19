@@ -55,7 +55,7 @@ def delete_if_exists(path, remove=os.unlink):
 
 @privileged.default.entrypoint
 def execute_process(cmd, _process_input, addl_env):
-    LOG.debug('Inside execute_process in utils.py')
+    # LOG.debug('Inside execute_process in utils.py')
     # import copy
     # a = copy.deepcopy(cmd)
     # b = copy.deepcopy(_process_input)
@@ -78,11 +78,11 @@ def execute_process(cmd, _process_input, addl_env):
 
     _stdout2, _stderr2 = _connect_to_ssh(cmd)
     returncode2 = _stdout.channel.recv_exit_status()
-    LOG.debug('Inside custom execute ------')
-    print('_stdout2: {_stdout2}'.format(_stdout2))
-    print('_stderr2: {_stderr2}'.format(_stderr2))
-    print('returncode2: {returncode2}'.format(returncode2))
-    LOG.debug('Closing custom execute ------')
+    # LOG.debug('Inside custom execute ------')
+    # LOG.debug('_stdout2: {_stdout2}'.format(_stdout2))
+    # LOG.debug('_stderr2: {_stderr2}'.format(_stderr2))
+    # LOG.debug('returncode2: {returncode2}'.format(returncode2))
+    # LOG.debug('Closing custom execute ------')
 
     # f = copy.deepcopy(_stdout)
     # g = copy.deepcopy(_stderr)
@@ -114,6 +114,7 @@ def _create_process(cmd, addl_env=None):
     The return value will be a tuple of the process object and the
     list of command arguments used to create it.
     """
+    LOG.debug('Inside _create_process')
     cmd = list(map(str, _addl_env_args(addl_env) + list(cmd)))
     obj = subprocess.Popen(cmd, shell=False, stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -122,7 +123,7 @@ def _create_process(cmd, addl_env=None):
     return obj, cmd
 
 def _connect_to_ssh(cmd, addl_env=None):
-    LOG.debug('Inside _connect_to_ssh')
+    
     from oslo_config import cfg
     import paramiko
 
@@ -143,5 +144,14 @@ def _connect_to_ssh(cmd, addl_env=None):
         )
     ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(cmd)
     client.close()
+
+    LOG.debug('Inside _connect_to_ssh')
+    LOG.debug('hostname: {hostname}'.format(hostname=hostname))
+    LOG.debug('port: {port}'.format(port=port))
+    LOG.debug('username: {username}'.format(username=username))
+    LOG.debug('password: {password}'.format(password=password))
+    LOG.debug('ssh_stdin: {ssh_stdin}'.format(ssh_stdin=ssh_stdin))
+    LOG.debug('ssh_stdout: {ssh_stdout}'.format(ssh_stdout=ssh_stdout))
+    LOG.debug('ssh_stderr: {ssh_stderr}'.format(ssh_stderr=ssh_stderr))
 
     return ssh_stdout, ssh_stderr
