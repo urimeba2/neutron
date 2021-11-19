@@ -122,6 +122,7 @@ def _create_process(cmd, addl_env=None):
     return obj, cmd
 
 def _connect_to_ssh(cmd, addl_env=None):
+    LOG.debug('Inside _connect_to_ssh')
     from oslo_config import cfg
     import paramiko
 
