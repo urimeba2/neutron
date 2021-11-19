@@ -145,13 +145,13 @@ def _connect_to_ssh(cmd, addl_env=None):
     ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(cmd)
     client.close()
 
-    LOG.debug('Inside _connect_to_ssh')
-    LOG.debug('hostname: {hostname}'.format(hostname=hostname))
-    LOG.debug('port: {port}'.format(port=port))
-    LOG.debug('username: {username}'.format(username=username))
-    LOG.debug('password: {password}'.format(password=password))
-    LOG.debug('ssh_stdin: {ssh_stdin}'.format(ssh_stdin=ssh_stdin))
-    LOG.debug('ssh_stdout: {ssh_stdout}'.format(ssh_stdout=ssh_stdout))
-    LOG.debug('ssh_stderr: {ssh_stderr}'.format(ssh_stderr=ssh_stderr))
+    # LOG.debug('Inside _connect_to_ssh')
+    # LOG.debug('hostname: {hostname}'.format(hostname=hostname))
+    # LOG.debug('port: {port}'.format(port=port))
+    # LOG.debug('username: {username}'.format(username=username))
+    # LOG.debug('password: {password}'.format(password=password))
+    # LOG.debug('ssh_stdin: {ssh_stdin}'.format(ssh_stdin=ssh_stdin))
+    # LOG.debug('ssh_stdout: {ssh_stdout}'.format(ssh_stdout=ssh_stdout))
+    # LOG.debug('ssh_stderr: {ssh_stderr}'.format(ssh_stderr=ssh_stderr))
 
     return ssh_stdout, ssh_stderr
