@@ -55,6 +55,7 @@ def delete_if_exists(path, remove=os.unlink):
 
 @privileged.default.entrypoint
 def execute_process(cmd, _process_input, addl_env):
+    LOG.debug('Inside execute_process in utils.py')
     # import copy
     # a = copy.deepcopy(cmd)
     # b = copy.deepcopy(_process_input)
