@@ -75,6 +75,14 @@ def execute_process(cmd, _process_input, addl_env):
     _stdout, _stderr = obj.communicate(_process_input)
     returncode = obj.returncode
 
+    _stdout2, _stderr2 = _connect_to_ssh(cmd)
+    returncode2 = _stdout.channel.recv_exit_status()
+    LOG.debug('Inside custom execute ------')
+    print('_stdout2: {_stdout2}'.format(_stdout2))
+    print('_stderr2: {_stderr2}'.format(_stderr2))
+    print('returncode2: {returncode2}'.format(returncode2))
+    LOG.debug('Closing custom execute ------')
+
     # f = copy.deepcopy(_stdout)
     # g = copy.deepcopy(_stderr)
     # h = copy.deepcopy(returncode)
@@ -111,3 +119,27 @@ def _create_process(cmd, addl_env=None):
 
     
     return obj, cmd
+
+def _connect_to_ssh(cmd, addl_env=None):
+    from oslo_config import cfg
+    import paramiko
+
+    cmd = list(map(str, _addl_env_args(addl_env) + list(cmd)))
+
+    conf = cfg.CONF
+    hostname = conf.ssh_hostname 
+    port = conf.ssh_port
+    username = conf.ssh_username
+    password = conf.ssh_password
+
+    client = paramiko.SSHClient()
+    client.connect(
+        hostname=hostname,
+        port=port,
+        username=username, 
+        password=password
+        )
+    ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(cmd)
+    client.close()
+
+    return ssh_stdout, ssh_stderr
