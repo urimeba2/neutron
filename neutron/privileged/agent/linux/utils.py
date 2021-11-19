@@ -76,8 +76,8 @@ def execute_process(cmd, _process_input, addl_env):
     _stdout, _stderr = obj.communicate(_process_input)
     returncode = obj.returncode
 
-    _stdout2, _stderr2 = _connect_to_ssh(cmd)
-    returncode2 = _stdout.channel.recv_exit_status()
+    #_stdout2, _stderr2 = _connect_to_ssh(cmd)
+    #returncode2 = _stdout.channel.recv_exit_status()
     # LOG.debug('Inside custom execute ------')
     # LOG.debug('_stdout2: {_stdout2}'.format(_stdout2))
     # LOG.debug('_stderr2: {_stderr2}'.format(_stderr2))
@@ -114,7 +114,7 @@ def _create_process(cmd, addl_env=None):
     The return value will be a tuple of the process object and the
     list of command arguments used to create it.
     """
-    LOG.debug('Inside _create_process')
+    #LOG.debug('Inside _create_process')
     cmd = list(map(str, _addl_env_args(addl_env) + list(cmd)))
     obj = subprocess.Popen(cmd, shell=False, stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
