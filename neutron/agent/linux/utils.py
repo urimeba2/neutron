@@ -128,7 +128,7 @@ def execute(cmd, process_input=None, addl_env=None,
 
         some_conf = cfg.CONF
         LOG.debug('This is the conf: {conf}'.format(
-            conf=some_conf
+            conf=some_conf.ssh_hostname
         ))
 
         if process_input is not None:
