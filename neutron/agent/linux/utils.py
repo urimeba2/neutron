@@ -123,8 +123,8 @@ def execute(cmd, process_input=None, addl_env=None,
             extra_ok_codes=None, run_as_root=False, privsep_exec=False):
     try:
         LOG.debug('Inside execute...')
-        from oslo_config import cfg
-        import paramiko
+        # from oslo_config import cfg
+        # import paramiko
 
         # some_conf = cfg.CONF
         # LOG.debug('This is the HOSTNAME: {conf}'.format(
