@@ -150,9 +150,9 @@ def execute(cmd, process_input=None, addl_env=None,
             
             _process_input = None
             LOG.debug('Inside execute ELSE-B with _process_input: {process_input} and cmd: {cmd} and  addl_env: {addl_env}'.format(
-                process_input=_process_input,
+                process_input='_process_input',
                 cmd='cmd',
-                addl_env=addl_env
+                addl_env='addl_env'
             ))
 
         if run_as_root and privsep_exec:
