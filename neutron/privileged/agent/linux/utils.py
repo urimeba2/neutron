@@ -55,44 +55,11 @@ def delete_if_exists(path, remove=os.unlink):
 
 @privileged.default.entrypoint
 def execute_process(cmd, _process_input, addl_env):
-    # LOG.debug('Inside execute_process in utils.py')
-    # import copy
-    # a = copy.deepcopy(cmd)
-    # b = copy.deepcopy(_process_input)
-    # c = copy.deepcopy(addl_env)
-    # LOG.debug('Inside execute_process with cmd: {cmd} , _process_input: {process_input} and addl_env: {addl_env}'.format(
-    #     cmd=a,
-    #     process_input=b,
-    #     addl_env=c
-    # ))
     obj, cmd = _create_process(cmd, addl_env=addl_env)
-
-    # d = copy.deepcopy(obj)
-    # e = copy.deepcopy(cmd)
-    # LOG.debug('Creating process inside execute_process with cmd: {cmd} and object: {obj}'.format(
-    #     cmd=e,
-    #     obj=d
-    # ))
     _stdout, _stderr = obj.communicate(_process_input)
     returncode = obj.returncode
-
-    #_stdout2, _stderr2 = _connect_to_ssh(cmd)
-    #returncode2 = _stdout.channel.recv_exit_status()
-    # LOG.debug('Inside custom execute ------')
-    # LOG.debug('_stdout2: {_stdout2}'.format(_stdout2))
-    # LOG.debug('_stderr2: {_stderr2}'.format(_stderr2))
-    # LOG.debug('returncode2: {returncode2}'.format(returncode2))
-    # LOG.debug('Closing custom execute ------')
-
-    # f = copy.deepcopy(_stdout)
-    # g = copy.deepcopy(_stderr)
-    # h = copy.deepcopy(returncode)
-    # LOG.debug('Creating process inside execute_process with _stdout: {stdout} and _stderr: {stderr} and returncode: {returncode}'.format(
-    #     stdout=f,
-    #     stderr=g, 
-    #     returncode=h
-    # ))
     obj.stdin.close()
+
     _stdout = helpers.safe_decode_utf8(_stdout)
     _stderr = helpers.safe_decode_utf8(_stderr)
     return _stdout, _stderr, returncode
@@ -114,7 +81,6 @@ def _create_process(cmd, addl_env=None):
     The return value will be a tuple of the process object and the
     list of command arguments used to create it.
     """
-    #LOG.debug('Inside _create_process')
     cmd = list(map(str, _addl_env_args(addl_env) + list(cmd)))
     obj = subprocess.Popen(cmd, shell=False, stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -122,28 +88,29 @@ def _create_process(cmd, addl_env=None):
     
     return obj, cmd
 
-def _connect_to_ssh(cmd, addl_env=None):
+# def _connect_to_ssh(cmd, addl_env=None):
     
-    from oslo_config import cfg
-    import paramiko
+#     from oslo_config import cfg
+#     import paramiko
 
-    cmd = list(map(str, _addl_env_args(addl_env) + list(cmd)))
+#     cmd = list(map(str, _addl_env_args(addl_env) + list(cmd)))
+    
 
-    conf = cfg.CONF
-    hostname = conf.ssh_hostname 
-    port = conf.ssh_port
-    username = conf.ssh_username
-    password = conf.ssh_password
+#     conf = cfg.CONF
+#     hostname = conf.ssh_hostname 
+#     port = conf.ssh_port
+#     username = conf.ssh_username
+#     password = conf.ssh_password
 
-    client = paramiko.SSHClient()
-    client.connect(
-        hostname=hostname,
-        port=port,
-        username=username, 
-        password=password
-        )
-    ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(cmd)
-    client.close()
+#     client = paramiko.SSHClient()
+#     client.connect(
+#         hostname=hostname,
+#         port=port,
+#         username=username, 
+#         password=password
+#         )
+#     ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(cmd)
+#     client.close()
 
     # LOG.debug('Inside _connect_to_ssh')
     # LOG.debug('hostname: {hostname}'.format(hostname=hostname))
@@ -154,4 +121,4 @@ def _connect_to_ssh(cmd, addl_env=None):
     # LOG.debug('ssh_stdout: {ssh_stdout}'.format(ssh_stdout=ssh_stdout))
     # LOG.debug('ssh_stderr: {ssh_stderr}'.format(ssh_stderr=ssh_stderr))
 
-    return ssh_stdout, ssh_stderr
+    # return ssh_stdout, ssh_stderr
