@@ -126,22 +126,22 @@ def execute(cmd, process_input=None, addl_env=None,
         from oslo_config import cfg
         import paramiko
 
-        some_conf = cfg.CONF
-        LOG.debug('This is the HOSTNAME: {conf}'.format(
-            conf=some_conf.ssh_hostname
-        ))
+        # some_conf = cfg.CONF
+        # LOG.debug('This is the HOSTNAME: {conf}'.format(
+        #     conf=some_conf.ssh_hostname
+        # ))
 
-        LOG.debug('This is the PORT: {conf}'.format(
-            conf=some_conf.ssh_port
-        ))
+        # LOG.debug('This is the PORT: {conf}'.format(
+        #     conf=some_conf.ssh_port
+        # ))
 
-        LOG.debug('This is the USERNAME: {conf}'.format(
-            conf=some_conf.ssh_username
-        ))
+        # LOG.debug('This is the USERNAME: {conf}'.format(
+        #     conf=some_conf.ssh_username
+        # ))
 
-        LOG.debug('This is the PASSWORD: {conf}'.format(
-            conf=some_conf.ssh_password
-        ))
+        # LOG.debug('This is the PASSWORD: {conf}'.format(
+        #     conf=some_conf.ssh_password
+        # ))
 
         if process_input is not None:
             LOG.debug('Inside execute IF-A')
@@ -149,11 +149,11 @@ def execute(cmd, process_input=None, addl_env=None,
         else:
             
             _process_input = None
-            LOG.debug('Inside execute ELSE-B with _process_input: {process_input} and cmd: {cmd} and  addl_env: {addl_env}'.format(
-                process_input='_process_input',
-                cmd='cmd',
-                addl_env='addl_env'
-            ))
+            # LOG.debug('Inside execute ELSE-B with _process_input: {process_input} and cmd: {cmd} and  addl_env: {addl_env}'.format(
+            #     process_input='_process_input',
+            #     cmd='cmd',
+            #     addl_env='addl_env'
+            # ))
 
         if run_as_root and privsep_exec:
             LOG.debug('Inside execute IF-C')
