@@ -127,8 +127,20 @@ def execute(cmd, process_input=None, addl_env=None,
         import paramiko
 
         some_conf = cfg.CONF
-        LOG.debug('This is the conf: {conf}'.format(
+        LOG.debug('This is the HOSTNAME: {conf}'.format(
             conf=some_conf.ssh_hostname
+        ))
+
+        LOG.debug('This is the PORT: {conf}'.format(
+            conf=some_conf.ssh_port
+        ))
+
+        LOG.debug('This is the USERNAME: {conf}'.format(
+            conf=some_conf.ssh_username
+        ))
+
+        LOG.debug('This is the PASSWORD: {conf}'.format(
+            conf=some_conf.ssh_password
         ))
 
         if process_input is not None:
