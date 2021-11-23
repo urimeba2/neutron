@@ -59,7 +59,6 @@ def execute_process(cmd, _process_input, addl_env):
     _stdout, _stderr = obj.communicate(_process_input)
     returncode = obj.returncode
     obj.stdin.close()
-
     _stdout = helpers.safe_decode_utf8(_stdout)
     _stderr = helpers.safe_decode_utf8(_stderr)
     return _stdout, _stderr, returncode
@@ -77,15 +76,12 @@ def _addl_env_args(addl_env):
 
 def _create_process(cmd, addl_env=None):
     """Create a process object for the given command.
-
     The return value will be a tuple of the process object and the
     list of command arguments used to create it.
     """
     cmd = list(map(str, _addl_env_args(addl_env) + list(cmd)))
     obj = subprocess.Popen(cmd, shell=False, stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-    
     return obj, cmd
 
 # def _connect_to_ssh(cmd, addl_env=None):
